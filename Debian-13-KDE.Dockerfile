@@ -97,6 +97,17 @@ RUN apt-get update && \
         echo "--> [mobile] 正在移除 ModemManager (容器内无真实 modem 硬件，会导致开机卡住)..." && \
         apt-get purge -y --auto-remove modemmanager || true; \
     fi && \
+    if [ "$BUILD_KDE" = "niri" ]; then \
+        apt install -y --no-install-recommends \
+        git build-essential cmake ninja-build clang pkg-config rustup \
+        libudev-dev libgbm-dev libxkbcommon-dev libegl1-mesa-dev \
+        libwayland-dev libinput-dev libdbus-1-dev libsystemd-dev \
+        libseat-dev libpipewire-0.3-dev libpango1.0-dev libdisplay-info-dev \
+        libcairo2-dev libharfbuzz-dev libfontconfig1-dev; \
+        rustup default stable; \
+        git clone --depth=1 https://github.com/Celvra/ANiri && cd Aniri; \
+        cargo build --release; \
+
     ############################################## anland_kde(wayland) 支持 ################################################
     if [ "$ENABLE_anland_kde_ARG" = "true" ] && ([ "$BUILD_KDE" = "min" ] || [ "$BUILD_KDE" = "conc" ] || [ "$BUILD_KDE" = "mobile" ]); then \
         if [ -z "$ANLAND_KDE_RELEASE_TAG" ]; then \
