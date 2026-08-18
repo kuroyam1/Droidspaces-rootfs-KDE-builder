@@ -113,9 +113,6 @@ RUN apt-get update && \
         cargo build --release; \
         install -m 755 target/release/xwayland-satellite /usr/bin/xwayland-satellite; \
         cd .. && rm -fr xwayland-satellite-for-aniri; \
-
-        apt install -y waybar fuzzel swayimg swaybg mako-notifier alacritty \
-        fonts-font-awesome fonts-symbola fonts-material-design-icons-iconfont fonts-noto-color-emoji; \
     fi && \
     ############################################## anland_kde(wayland) 支持 ################################################
     if [ "$ENABLE_anland_kde_ARG" = "true" ] && ([ "$BUILD_KDE" = "min" ] || [ "$BUILD_KDE" = "conc" ] || [ "$BUILD_KDE" = "mobile" ] || [ "$BUILD_KDE" = "niri"]); then \
