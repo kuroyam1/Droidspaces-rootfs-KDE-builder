@@ -105,8 +105,10 @@ RUN apt-get update && \
         libseat-dev libpipewire-0.3-dev libpango1.0-dev libdisplay-info-dev \
         libcairo2-dev libharfbuzz-dev libfontconfig1-dev; \
         rustup default stable; \
-        git clone --depth=1 https://github.com/Celvra/ANiri && cd Aniri; \
+        git clone --depth=1 https://github.com/Celvra/ANiri && cd ANiri; \
         cargo build --release; \
+        install -m 755 target/release/niri /usr/bin/niri; \
+        cd .. && rm -fr ANiri; \
     fi && \
     ############################################## anland_kde(wayland) 支持 ################################################
     if [ "$ENABLE_anland_kde_ARG" = "true" ] && ([ "$BUILD_KDE" = "min" ] || [ "$BUILD_KDE" = "conc" ] || [ "$BUILD_KDE" = "mobile" ] || [ "$BUILD_KDE" = "niri"]); then \
