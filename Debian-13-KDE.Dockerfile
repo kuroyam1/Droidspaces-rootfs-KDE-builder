@@ -55,7 +55,7 @@ RUN chmod +x /usr/local/bin/download-firmware /etc/profile.d/ds-aliases.sh /usr/
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     # 核心工具组件
-    bash jq dialog coreutils file findutils grep sed gawk curl wget ca-certificates locales bash-completion udev dbus systemd-sysv systemd-resolved fastfetch \
+    bash jq dialog coreutils file findutils grep sed gawk curl wget ca-certificates locales bash-completion udev dbus systemd-sysv systemd-resolved fastfetch vim \
     # 用户请求的基础开发/编辑工具
     git nano  sudo \
     # 网络与 SSH 工具
@@ -97,8 +97,28 @@ RUN apt-get update && \
         echo "--> [mobile] 正在移除 ModemManager (容器内无真实 modem 硬件，会导致开机卡住)..." && \
         apt-get purge -y --auto-remove modemmanager || true; \
     fi && \
+    if [ "$BUILD_KDE" = "niri" ]; then \
+        apt install -y --no-install-recommends \
+        git build-essential cmake ninja-build clang pkg-config rustup \
+        libudev-dev libgbm-dev libxkbcommon-dev libegl1-mesa-dev \
+        libwayland-dev libinput-dev libdbus-1-dev libsystemd-dev \
+        libseat-dev libpipewire-0.3-dev libpango1.0-dev libdisplay-info-dev \
+        libcairo2-dev libharfbuzz-dev libfontconfig1-dev; \
+        rustup default stable; \
+        git clone --depth=1 https://github.com/Celvra/ANiri && cd ANiri; \
+        cargo build --release; \
+        install -m 755 target/release/niri /usr/bin/niri; \
+        cd .. && rm -fr ANiri; \
+        git clone --depth=1 https://github.com/Celvra/xwayland-satellite-for-aniri && cd xwayland-satellite-for-aniri; \
+        cargo build --release; \
+        install -m 755 target/release/xwayland-satellite /usr/bin/xwayland-satellite; \
+        cd .. && rm -fr xwayland-satellite-for-aniri; \
+
+        apt install -y waybar fuzzel swayimg swaybg mako-notifier alacritty \
+        fonts-font-awesome fonts-symbola fonts-material-design-icons-iconfont fonts-noto-color-emoji; \
+    fi && \
     ############################################## anland_kde(wayland) 支持 ################################################
-    if [ "$ENABLE_anland_kde_ARG" = "true" ] && ([ "$BUILD_KDE" = "min" ] || [ "$BUILD_KDE" = "conc" ] || [ "$BUILD_KDE" = "mobile" ]); then \
+    if [ "$ENABLE_anland_kde_ARG" = "true" ] && ([ "$BUILD_KDE" = "min" ] || [ "$BUILD_KDE" = "conc" ] || [ "$BUILD_KDE" = "mobile" ] || [ "$BUILD_KDE" = "niri"]); then \
         if [ -z "$ANLAND_KDE_RELEASE_TAG" ]; then \
             echo "错误：Docker 构建必须传入固定的 ANLAND_KDE_RELEASE_TAG。" >&2; \
             exit 1; \
