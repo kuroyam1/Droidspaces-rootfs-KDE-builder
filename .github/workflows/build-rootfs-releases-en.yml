@@ -22,7 +22,7 @@ on:
         description: 'Custom username (default: Gold)'
         required: false
         type: string
-        default: 'Gold'
+        default: 'spes'
       build_KDE:
         description: 'KDE desktop choice (conc-compact, min-minimal, mobile-mobile edition, none-no KDE)'
         required: true
@@ -32,6 +32,7 @@ on:
           - 'conc'
           - 'min'
           - 'mobile'
+          - 'niri'
           - 'none'
       build_KDE_plus:
         description: 'KDE desktop auto-start on boot (Requires KDE desktop choice to be conc, min, or mobile)'
