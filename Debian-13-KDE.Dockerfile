@@ -107,7 +107,7 @@ RUN apt-get update && \
         rustup default stable; \
         git clone --depth=1 https://github.com/Celvra/ANiri && cd Aniri; \
         cargo build --release; \
-
+    fi && \
     ############################################## anland_kde(wayland) 支持 ################################################
     if [ "$ENABLE_anland_kde_ARG" = "true" ] && ([ "$BUILD_KDE" = "min" ] || [ "$BUILD_KDE" = "conc" ] || [ "$BUILD_KDE" = "mobile" ] || [ "$BUILD_KDE" = "niri"]); then \
         if [ -z "$ANLAND_KDE_RELEASE_TAG" ]; then \
